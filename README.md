@@ -1,0 +1,2 @@
+# Hotel-Manager
+The goal is to develop a web application that functions as a centralized platform for hotel management. This application should offer comprehensive functionality for managing hotels, rooms, and associated events.
