@@ -8,15 +8,15 @@ const router = Router()
 router.post(
     "/register/",
     registerValidator,
-    register,
-    validarAdmin
+    validarAdmin,
+    register
+    
 )
 
 router.post(
     "/login/",
     loginValidator,
-    login,
-    validarAdmin
+    login
 )
 
 export default router

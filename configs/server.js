@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import { dbConection } from "./mongo.js";
+import { hash, verify } from "argon2";
 
 
 import authRoutes from "../src/auth/auth.routes.js";

@@ -1,6 +1,7 @@
 import User from './user.model.js';
 import { hash, verify } from 'argon2';
 import { response, request } from 'express';
+import mongoose from 'mongoose';
 
 export const getUsers = async (req = request, res = response) => {
     try {
@@ -51,51 +52,102 @@ export const getUsers = async (req = request, res = response) => {
       });
     }
   };
-  
-  export const updateUser = async (req, res = response) => {
+
+  export const updateUser = async (req, res) => {
     try {
-      const { userId } = req.params;
-      const { currentPassword, password, role, ...data } = req.body;
-  
+      const {id} = req.params;
+      const {password, ...data} = req.body; 
+      const user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          msg: "User not found",
+        });
+      }
+
       if (password) {
-        data.password = await hash(password);
+        user.password = await hash(password);
       }
-  
-      if (role) {
-        data.role = role;
-      }
-  
-      const updatedUser = await User.findByIdAndUpdate(userId, data, { new: true });
-  
+
+      Object.keys(data).forEach(key => {
+          user[key] = data[key];
+      });
+
+      await user.save();
+
+      const userResponse = user.toObject(); 
+      delete userResponse.password; 
+
       res.status(200).json({
         success: true,
-        msg: "User successfully updated",
-        user: updatedUser,
+        msg: "User updated successfully",
+        user: userResponse,
       });
+
     } catch (error) {
+      console.error("Error updating user:", error);
       res.status(500).json({
-        success: false,
-        msg: "Error updating user",
-        error: error.message,
+        message: "An error occurred while updating the user.", 
+        error: error.message 
       });
     }
-  };
+};
   
   
-  export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("Attempting to deactivate user with ID:", id);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { estado: false },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      console.log("User not found for ID:", id);
+      return res.status(404).json({
+        success: false,
+        msg: "User not found or already deactivated",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      msg: "User deactivated successfully",
+      user: {
+         _id: updatedUser._id,
+         estado: updatedUser.estado,
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "An error occurred while deactivating the user.",
+      error: error.message,
+    });
+  }
+};
+
+export const getEmailsAndNames = async (req, res) => {
     try {
-      const { userId } = req.params;
-      await User.findByIdAndUpdate(userId, { state: false }, { new: true });
-  
-      res.status(200).json({
-        success: true,
-        msg: "User deactivated successfully",
-      });
+        const users = await User.find().select('nombre email');
+
+        res.status(200).json({
+            success: true,
+            message: "Emails and names fetched successfully",
+            data: users,
+        });
+
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        msg: "Error deactivating user",
-        error: error.message,
-      });
+        console.error("Error fetching emails and names:", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching user emails and names.",
+            error: error.message,
+        });
     }
-  };
+};

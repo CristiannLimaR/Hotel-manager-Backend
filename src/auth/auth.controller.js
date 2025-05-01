@@ -10,9 +10,8 @@ export const register = async (req, res) => {
     console.log("datos:", data);
 
     const user = await User.create({
-      name: data.name,
+      nombre: data.nombre,
       email: data.email,
-      role: data.role,
       password: encryptedPassword,
     });
 
@@ -21,6 +20,7 @@ export const register = async (req, res) => {
       userDetails: {
         user: user.name,
         email: user.email,
+        role: user.role
       },
     });
   } catch (error) {
