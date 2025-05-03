@@ -4,6 +4,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { dbConection } from "./mongo.js";
 
+import hotelsRoutes from "../src/hotels/hotels.routes.js";
 
 
 export const middlewares = (app) => {
@@ -15,7 +16,7 @@ export const middlewares = (app) => {
 };
 
 const routes = (app) => {
-
+  app.use("/HotelManager/v1/hotels", hotelsRoutes);
 };
 
 const connectDB = async () => {
