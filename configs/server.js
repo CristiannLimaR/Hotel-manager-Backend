@@ -4,6 +4,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { dbConection } from "./mongo.js";
 
+import User from "../src/users/user.model.js";
+
+import authRoutes from "../src/auth/auth.routes.js";
+import userRoutes from "../src/users/user.routes.js";
 import hotelsRoutes from "../src/hotels/hotels.routes.js";
 
 
@@ -17,6 +21,8 @@ export const middlewares = (app) => {
 
 const routes = (app) => {
   app.use("/HotelManager/v1/hotels", hotelsRoutes);
+  app.use("/HotelManager/v1/auth", authRoutes);
+  app.use("/HotelManager/v1/user", userRoutes);
 };
 
 const connectDB = async () => {
@@ -37,8 +43,34 @@ export const initServer = () => {
     connectDB();
     routes(app);
     app.listen(port);
+    crearAdmin();
     console.log(`Server running on port ${port}`);
   } catch (err) {
     console.log(`Server init failed: ${err}`);
   }
 };
+
+export const crearAdmin = async () => {
+  try {
+    const existeAdmin = await User.findOne({ email: 'admin@admin.com' });
+
+    if (!existeAdmin) {
+      const hashedPass = await hash('1234567');
+
+      const adminUser = new User({
+        nombre: 'Admin',
+        email: 'admin@admin.com',
+        password: hashedPass,
+        role: 'ADMIN_ROLE' 
+      });
+
+      await adminUser.save();
+      console.log('Admin creado correctamente');
+    } else {
+      console.log('Admin ya existe');
+    }
+  } catch (error) {
+    console.log(`Error al crear admin: ${error}`);
+  }
+};
+
