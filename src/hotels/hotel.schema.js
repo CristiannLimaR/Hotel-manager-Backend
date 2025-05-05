@@ -22,6 +22,7 @@ const HotelSchema = new Schema({
         min: Number,
         max: Number
     },
+    totalRooms:{ type: Number },
     state:{
         type: Boolean,
         default: true

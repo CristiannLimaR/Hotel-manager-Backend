@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
-import { generarJWT } from "../helpers/generar-JWT.js"
+import { validarJWT } from '../middlewares/validar-JWT.js';
+import { validarAdmin } from '../middlewares/validar-admin.js';
 
 import {
     saveHotel
@@ -10,6 +11,10 @@ const router = Router()
 
 router.post(
     "/save",
+    [
+        validarJWT,
+        validarAdmin
+    ],
     saveHotel
 )
 

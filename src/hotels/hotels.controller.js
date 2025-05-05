@@ -30,6 +30,7 @@ export const saveHotel = async (req,res) => {
 export const getHotels = async (req,res) => {
     try {
         const query = {state:true}
+        const { category, direction } = req.query
 
         const hotels = await Hotel.find(query)
 
@@ -45,3 +46,4 @@ export const getHotels = async (req,res) => {
         })
     }
 }
+

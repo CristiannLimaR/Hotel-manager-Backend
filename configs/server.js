@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import { hash, verify } from "argon2";
 import { dbConection } from "./mongo.js";
 
 import User from "../src/users/user.model.js";
@@ -22,7 +23,7 @@ export const middlewares = (app) => {
 const routes = (app) => {
   app.use("/HotelManager/v1/hotels", hotelsRoutes);
   app.use("/HotelManager/v1/auth", authRoutes);
-  app.use("/HotelManager/v1/user", userRoutes);
+  app.use("/v1/user", userRoutes);
 };
 
 const connectDB = async () => {
