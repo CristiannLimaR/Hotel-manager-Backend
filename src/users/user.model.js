@@ -18,7 +18,7 @@ export const UserSchema = Schema({
     },
     role:{
         type: String,
-        enum: ['USER_ROLE', 'ADMIN_ROLE'],
+        enum: ['USER_ROLE', 'ADMIN_ROLE', 'MANAGER_ROLE'],
         default: 'USER_ROLE'
     },
     createdAt: {

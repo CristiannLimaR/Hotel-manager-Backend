@@ -1,6 +1,5 @@
-import Event from "../event/event.js";
-// import Hotel from "../hotel/Hotel.js"; agregar esta importacion cuando ya este hoteles
-
+import Event from "./event.model.js";
+import Hotel from "../hotels/hotel.model.js";
 
 // Crear evento
 export const crearEvento = async (req, res) => {
@@ -27,7 +26,7 @@ export const crearEvento = async (req, res) => {
     await nuevoEvento.save();
     res.status(201).json(nuevoEvento);
   } catch (error) {
-    res.status(500).json({ message: "Error al crear el evento", error });
+    res.status(500).json({ message: "Error al crear el evento", error: error.message });
   }
 };
 
@@ -50,7 +49,7 @@ export const listarEventosPorHotel = async (req, res) => {
     const eventos = await Event.find(filtros);
     res.json(eventos);
   } catch (error) {
-    res.status(500).json({ message: "Error al listar eventos", error });
+    res.status(500).json({ message: "Error al listar eventos", error: error.message });
   }
 };
 
@@ -66,7 +65,7 @@ export const obtenerEventoPorId = async (req, res) => {
 
     res.json(evento);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener el evento", error });
+    res.status(500).json({ message: "Error al obtener el evento", error: error.message });
   }
 };
 
@@ -76,9 +75,7 @@ export const editarEvento = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
-    if (data.fecha && new Date(data.fecha) <= new Date()) {
-      return res.status(400).json({ message: "La fecha debe ser futura" });
-    }
+   
 
     const evento = await Event.findByIdAndUpdate(id, data, { new: true });
 
@@ -88,7 +85,7 @@ export const editarEvento = async (req, res) => {
 
     res.json(evento);
   } catch (error) {
-    res.status(500).json({ message: "Error al editar el evento", error });
+    res.status(500).json({ message: "Error al editar el evento", error: error.message });
   }
 };
 
@@ -97,11 +94,7 @@ export const cancelarEvento = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const evento = await Event.findByIdAndUpdate(
-      id,
-      { estado: false },
-      { new: true }
-    );
+    const evento = await Event.findByIdAndUpdate(id, { estado: false }, { new: true });
 
     if (!evento) {
       return res.status(404).json({ message: "Evento no encontrado" });
@@ -109,6 +102,6 @@ export const cancelarEvento = async (req, res) => {
 
     res.json({ message: "Evento cancelado", evento });
   } catch (error) {
-    res.status(500).json({ message: "Error al cancelar el evento", error });
+    res.status(500).json({ message: "Error al cancelar el evento", error: error.message });
   }
 };

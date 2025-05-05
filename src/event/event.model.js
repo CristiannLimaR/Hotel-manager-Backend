@@ -24,16 +24,19 @@ const EventSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: "Hotel",
       required: [true, "El hotel es obligatorio"],
-      autopopulate: { select: "nombre direccion -_id" },
+      autopopulate: { select: "nombre direccion" },
     },
     recursos_asignados: {
       type: [String],
       default: [],
     },
-    servicios_adicionales: {
-      type: [String],
-      default: [],
-    },
+    servicios_adicionales: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Service",
+        autopopulate: true,
+      },
+    ],
     tipo_evento: {
       type: String,
     },
