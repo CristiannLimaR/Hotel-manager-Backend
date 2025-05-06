@@ -5,23 +5,23 @@ import {
   obtenerEventoPorId,
   editarEvento,
   cancelarEvento,
-} from "../event/event.controller"
+} from "./event.controller.js"
 
 const router = Router();
 
 // Crear evento
-router.post("/api/hotels/:hotelId/events", crearEvento);
+router.post("/hotels/:hotelId/events",  crearEvento);
 
 // Listar eventos
-router.get("/api/hotels/:hotelId/events", listarEventosPorHotel);
+router.get("/hotels/:hotelId/events", listarEventosPorHotel);
 
 // Ver detalle
-router.get("/api/events/:id", obtenerEventoPorId);
+router.get("/:id", obtenerEventoPorId);
 
 // Editar evento
-router.put("/api/events/:id", editarEvento);
+router.put("/:id", editarEvento);
 
 // Cancelar evento
-router.delete("/api/events/:id", cancelarEvento);
+router.delete("/:id", cancelarEvento);
 
 export default router;

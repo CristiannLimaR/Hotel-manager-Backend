@@ -22,7 +22,13 @@ const HotelSchema = new Schema({
         min: Number,
         max: Number
     },
-    totalRooms:{ type: Number },
+    busyRooms:{ type: Number },
+    availableRooms:{ type: Number },
+    rooms:[{
+        type: Schema.Types.ObjectId,
+        ref: "Room",
+        autopopulate: true
+    }],
     state:{
         type: Boolean,
         default: true

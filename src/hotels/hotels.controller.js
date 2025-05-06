@@ -27,12 +27,32 @@ export const saveHotel = async (req,res) => {
     }
 }
 
-export const getHotels = async (req,res) => {
-    try {
-        const query = {state:true}
-        const { category, direction } = req.query
+export const getHotels = async (req, res) => {
+  try {
+       const query = { state: true };
+       const { nameCategory, direction, availability } = req.query
+
+
+        // FILTERS
+
+        if(nameCategory){
+            query.category = nameCategory
+        }
+
+        if(direction){
+            query.direction = { $regex: direction, $options: "i" } // Ignorar mayus y minus
+        }
+
+        if(availability){
+            query.availableRooms = { $gte: parseInt(availability) }
+        }
+        // END OF FILTERS
 
         const hotels = await Hotel.find(query)
+        .populate({
+            path: "rooms",
+            select: "-hotel_id -__v -createdAt -updatedAt" // No incluye el array de rooms que está en hotels
+          })
 
         res.status(200).json({
             msg: "Hotels found",
@@ -46,4 +66,3 @@ export const getHotels = async (req,res) => {
         })
     }
 }
-

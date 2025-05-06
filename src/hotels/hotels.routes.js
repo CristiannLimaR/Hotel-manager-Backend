@@ -4,7 +4,8 @@ import { validarJWT } from '../middlewares/validar-JWT.js';
 import { validarAdmin } from '../middlewares/validar-admin.js';
 
 import {
-    saveHotel
+    saveHotel,
+    getHotels
 } from "./hotels.controller.js"
 
 const router = Router()
@@ -16,6 +17,11 @@ router.post(
         validarAdmin
     ],
     saveHotel
+)
+
+router.get(
+    "/get",
+    getHotels
 )
 
 export default router

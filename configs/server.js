@@ -10,7 +10,9 @@ import User from "../src/users/user.model.js";
 import authRoutes from "../src/auth/auth.routes.js";
 import userRoutes from "../src/users/user.routes.js";
 import hotelsRoutes from "../src/hotels/hotels.routes.js";
-
+import eventsRoutes from "../src/event/event.routes.js";
+import roomsRoutes from "../src/rooms/room.routes.js";
+import reservationRoutes from "../src/reservations/reservation.routes.js";
 
 export const middlewares = (app) => {
   app.use(express.urlencoded({ extended: false }));
@@ -22,6 +24,9 @@ export const middlewares = (app) => {
 
 const routes = (app) => {
   app.use("/HotelManager/v1/hotels", hotelsRoutes);
+  app.use("/HotelManager/v1/rooms", roomsRoutes);
+  app.use("/HotelManager/v1/events", eventsRoutes);
+  app.use("/HotelManager/v1/reservations", reservationRoutes);
   app.use("/HotelManager/v1/auth", authRoutes);
   app.use("/v1/user", userRoutes);
 };
