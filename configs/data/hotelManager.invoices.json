@@ -1,0 +1,88 @@
+[{
+  "_id": {
+    "$oid": "681acdd46c0cd25574a8b276"
+  },
+  "reservation": {
+    "$oid": "681acd9c6c0cd25574a8b252"
+  },
+  "nights": 5,
+  "roomPricePerNight": {
+    "$numberDecimal": "NaN"
+  },
+  "roomTotal": {
+    "$numberDecimal": "NaN"
+  },
+  "services": [
+    {
+      "name": "Masaje Premium",
+      "price": {
+        "$numberDecimal": "99.99"
+      },
+      "quantity": 2,
+      "total": {
+        "$numberDecimal": "199.98"
+      },
+      "_id": {
+        "$oid": "681acdd46c0cd25574a8b277"
+      }
+    }
+  ],
+  "total_pagar": {
+    "$numberDecimal": "NaN"
+  },
+  "statusInvoice": "PENDING",
+  "status": true,
+  "Date": {
+    "$date": "2025-05-07T03:04:52.718Z"
+  },
+  "createdAt": {
+    "$date": "2025-05-07T03:04:52.719Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T03:04:52.719Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "681ace8c6db104f90cb89c67"
+  },
+  "reservation": {
+    "$oid": "681acd9c6c0cd25574a8b252"
+  },
+  "nights": 5,
+  "roomPricePerNight": {
+    "$numberDecimal": "150.99"
+  },
+  "roomTotal": {
+    "$numberDecimal": "754.95"
+  },
+  "services": [
+    {
+      "name": "Masaje Premium",
+      "price": {
+        "$numberDecimal": "99.99"
+      },
+      "quantity": 2,
+      "total": {
+        "$numberDecimal": "199.98"
+      },
+      "_id": {
+        "$oid": "681ace8c6db104f90cb89c68"
+      }
+    }
+  ],
+  "total_pagar": {
+    "$numberDecimal": "954.9300000000001"
+  },
+  "statusInvoice": "PENDING",
+  "status": true,
+  "Date": {
+    "$date": "2025-05-07T03:07:56.090Z"
+  },
+  "createdAt": {
+    "$date": "2025-05-07T03:07:56.095Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T03:07:56.095Z"
+  }
+}]

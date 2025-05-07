@@ -1,6 +1,7 @@
 import express from "express";
 import { 
-  getRoomById, 
+  saveRoom,
+  getRoomById,
   updateRoom, 
   deleteRoom 
 } from "./room.controller.js"; 
@@ -12,6 +13,8 @@ import { disableRoom } from "./room.controller.js";
 
 const router = express.Router();
 
+
+router.post("/", [validarJWT, validarAdmin], validarCampos, saveRoom);
 
 router.get("/:id",[validarJWT, validarAdmin, validateRoomId], validarCampos, getRoomById);
 

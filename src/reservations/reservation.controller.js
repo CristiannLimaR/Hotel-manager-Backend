@@ -2,8 +2,8 @@ import Reservation from "./reservation.model.js";
 
 export const saveReservation = async (req, res) => {
   try {
+    const authentificatedUser = req.user._id;
     const {
-      user,
       hotel,
       room,
       checkInDate,
@@ -12,7 +12,7 @@ export const saveReservation = async (req, res) => {
     } = req.body;
 
     const reservation = new Reservation({
-      user,
+      user: authentificatedUser,
       hotel,
       room,
       checkInDate,

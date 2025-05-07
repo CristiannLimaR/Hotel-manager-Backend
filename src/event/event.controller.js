@@ -1,5 +1,5 @@
 import Event from "./event.model.js";
-import Hotel from "../hotels/hotel.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 
 // Crear evento
 export const crearEvento = async (req, res) => {

@@ -38,16 +38,28 @@ export const validateInvoiceFilters = [
 ];
 
 
-export const invoiceExists = async (req, res, next) => {
-    try {
-      const invoice = await Invoice.findById(req.params.id);
-      if (!invoice || !invoice.state) {
-        return res
-          .status(404)
-          .json({ message: "Factura no encontrada o no disponible" });
-      }
-      next();
-    } catch (error) {
-      res.status(500).json({ message: "Error al verificar la factura", error });
+
+export const checkInvoiceExists = async (req, res, next) => {
+  try {
+    const { reservationId } = req.body;
+
+    if (!reservationId) {
+      return res.status(400).json({ msg: "reservationId is required" });
     }
-  };
+
+    const existingInvoice = await Invoice.findOne({ reservation: reservationId });
+
+    if (existingInvoice) {
+      return res.status(400).json({
+        msg: "Invoice for this reservation already exists",
+      });
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).json({
+      msg: "Error checking invoice existence",
+      error: error.message,
+    });
+  }
+};

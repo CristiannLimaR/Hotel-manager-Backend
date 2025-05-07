@@ -1,0 +1,26 @@
+[{
+  "_id": {
+    "$oid": "681acc1b9dbd525cbfcc1639"
+  },
+  "nombre_evento": "Conferencia Tech",
+  "descripcion": "Conferencia anual de tecnología",
+  "fecha": {
+    "$date": "2025-12-15T18:00:00.000Z"
+  },
+  "hotel_id": {
+    "$oid": "681aca0b6c38a92a345e2970"
+  },
+  "recursos_asignados": [
+    "Sala Principal",
+    "Proyector"
+  ],
+  "servicios_adicionales": [],
+  "tipo_evento": "Conferencia",
+  "estado": true,
+  "createdAt": {
+    "$date": "2025-05-07T02:57:31.402Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T02:57:31.402Z"
+  }
+}]

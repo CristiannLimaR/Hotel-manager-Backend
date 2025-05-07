@@ -1,6 +1,6 @@
 import Invoice from "./invoice.model.js";
-import Reservation from "./reservation.model.js";
-import Room from "./room.model.js"; // Necesario para obtener el precio de la habitación
+import Reservation from "../reservations/reservation.model.js";
+import Room from "../rooms/room.model.js";
 
 export const saveInvoice = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ export const saveInvoice = async (req, res) => {
         msg: "Room not found",
       });
     }
-    const roomPricePerNight = parseFloat(room.price);
+    const roomPricePerNight = parseFloat(room.price_per_night);
     const roomTotal = nights * roomPricePerNight;
 
     

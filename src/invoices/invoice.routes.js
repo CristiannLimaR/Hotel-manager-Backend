@@ -2,7 +2,7 @@ import express from "express";
 import {
   saveInvoice,
   getInvoices,
-  getInvoiceById,
+  getInvoicesForUser,
   updateInvoice,
   deleteInvoice,
 } from "./invoice.controller.js";
@@ -15,14 +15,14 @@ import {
   validateInvoiceUpdate, 
   validateInvoiceFilters 
 } from "../middlewares/validator-invoice.js";
-import { invoiceExists } from "../middlewares/validator-invoice.js";
+import { checkInvoiceExists } from "../middlewares/validator-invoice.js";
 
 const router = express.Router();
 
 
 router.post(
   "/",
-  [validarJWT, validateInvoiceInput],
+  [validarJWT, validateInvoiceInput, checkInvoiceExists],
   validarCampos,
   saveInvoice
 );
@@ -43,17 +43,11 @@ router.get(
   );
 
 
-router.get(
-  "/:id",
-  [validarJWT, validarAdmin],
-  validarCampos,
-  getInvoiceById
-);
 
 
 router.put(
   "/:id",
-  [validarJWT, invoiceExists, validarAdmin,validateInvoiceUpdate],
+  [validarJWT, checkInvoiceExists, validarAdmin,validateInvoiceUpdate],
   validarCampos,
   updateInvoice
 );
@@ -61,7 +55,7 @@ router.put(
 
 router.delete(
   "/:id",
-  [validarJWT, validarAdmin, invoiceExists],
+  [validarJWT, validarAdmin, checkInvoiceExists],
   validarCampos,
   deleteInvoice
 );

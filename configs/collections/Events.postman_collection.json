@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "5f796476-2b8e-490c-b528-ecdd827f0f8d",
+		"name": "Events",
+		"description": "API para gestión de eventos en hoteles",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42149033",
+		"_collection_link": "https://cristian-2488.postman.co/workspace/32873ad3-8212-4cf2-a843-c5888a232501/collection/42149033-5f796476-2b8e-490c-b528-ecdd827f0f8d?action=share&source=collection_link&creator=42149033"
+	},
+	"item": [
+		{
+			"name": "Crear Evento",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre_evento\": \"Conferencia Tech\",\n  \"descripcion\": \"Conferencia anual de tecnología\",\n  \"fecha\": \"2025-12-15T18:00:00Z\",\n  \"recursos_asignados\": [\"Sala Principal\", \"Proyector\"],\n  \"tipo_evento\": \"Conferencia\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/events/hotels/681aca0b6c38a92a345e2970/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"events",
+						"hotels",
+						"681aca0b6c38a92a345e2970",
+						"events"
+					]
+				},
+				"description": "Crea un nuevo evento en un hotel específico"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Eventos por Hotel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/events/hotels/65d4a1b2c8e9f01234567890/events?fecha=2024-12-01&tipo_evento=Conferencia",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"events",
+						"hotels",
+						"65d4a1b2c8e9f01234567890",
+						"events"
+					],
+					"query": [
+						{
+							"key": "fecha",
+							"value": "2024-12-01"
+						},
+						{
+							"key": "tipo_evento",
+							"value": "Conferencia"
+						}
+					]
+				},
+				"description": "Obtiene todos los eventos activos de un hotel con filtros opcionales"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Detalle de Evento",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/events/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"events",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Obtiene los detalles de un evento específico"
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Evento",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre_evento\": \"Conferencia Tech 2024 (Actualizado)\",\n  \"descripcion\": \"Conferencia anual de tecnología con nuevos speakers\",\n  \"servicios_adicionales\": [\"Catering\", \"WiFi Premium\", \"Traducción simultánea\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/events/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"events",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Actualiza la información de un evento existente"
+			},
+			"response": []
+		},
+		{
+			"name": "Cancelar Evento",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/events/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"events",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Cancela un evento (cambia estado a false)"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "hotel_id",
+			"value": "65d4a1b2c8e9f01234567890",
+			"type": "string"
+		},
+		{
+			"key": "event_id",
+			"value": "65d4a1b2c8e9f01234567891",
+			"type": "string"
+		}
+	]
+}

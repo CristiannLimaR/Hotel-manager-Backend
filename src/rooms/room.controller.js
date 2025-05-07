@@ -1,4 +1,5 @@
 import Room from "./room.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 
 export const saveRoom = async (req, res) => {
   try {
@@ -12,11 +13,36 @@ export const saveRoom = async (req, res) => {
       hotel_id,
     });
 
+    const hotel = await Hotel.findById(hotel_id).select("-rooms")
+
+    hotel.rooms.push(room._id)
+
+    const isAvailable = room.availability !== false    
+    if(isAvailable){
+      hotel.availableRooms = (hotel.availableRooms || 0) + 1;
+    }else{
+      hotel.busyRooms = (hotel.availableRooms || 0) +1;
+    }
+
+    // Guardar cambios en el hotel
     await room.save();
+    await hotel.save()
 
     res.status(201).json({
       msg: "Room saved successfully",
-      room,
+      room:{
+        type,
+        capacity,
+        price_per_night,
+        availability,
+        hotel_id:{
+          _id: hotel._id,
+          name: hotel.name,
+          direction: hotel.direction,
+          category: hotel.category,
+          facilities: hotel.facilities,
+        }
+      }
     });
   } catch (e) {
     res.status(500).json({

@@ -1,0 +1,34 @@
+[{
+  "_id": {
+    "$oid": "68199c641aa898359684d138"
+  },
+  "name": "Room Cleaning",
+  "description": "Daily room cleaning service",
+  "price": 20,
+  "category": "room",
+  "available": true,
+  "createdAt": {
+    "$date": "2025-05-06T05:21:40.872Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-06T05:21:40.872Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "681abba93e12374568dde9fe"
+  },
+  "name": "Masaje Premium",
+  "description": "Masaje de 90 minutos con aceites esenciales",
+  "price": 99.99,
+  "category": "spa",
+  "available": true,
+  "createdAt": {
+    "$date": "2025-05-07T01:47:21.601Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T01:48:36.952Z"
+  },
+  "__v": 0
+}]

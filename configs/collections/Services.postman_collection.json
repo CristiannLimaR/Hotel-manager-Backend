@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "5377703d-cb01-467d-a7ba-f38997578cd1",
+		"name": "Services",
+		"description": "API para gestión de servicios del hotel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42149033",
+		"_collection_link": "https://cristian-2488.postman.co/workspace/32873ad3-8212-4cf2-a843-c5888a232501/collection/42149033-5377703d-cb01-467d-a7ba-f38997578cd1?action=share&source=collection_link&creator=42149033"
+	},
+	"item": [
+		{
+			"name": "Crear Servicio (Admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Masaje Relajante\",\n  \"description\": \"Masaje de 60 minutos para aliviar tensiones\",\n  \"price\": 75.99,\n  \"category\": \"spa\",\n  \"available\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/services",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"services"
+					]
+				},
+				"description": "Crea un nuevo servicio (requiere autenticación de administrador)"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Servicios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/services?category=spa&available=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"services"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "spa"
+						},
+						{
+							"key": "available",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Obtiene todos los servicios con filtros opcionales (sin autenticación)"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Servicio por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/services/68199c641aa898359684d138",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"services",
+						"68199c641aa898359684d138"
+					]
+				},
+				"description": "Obtiene un servicio específico por su ID (requiere autenticación básica)"
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar Servicio (Admin)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Masaje Premium\",\n  \"description\": \"Masaje de 90 minutos con aceites esenciales\",\n  \"price\": 99.99,\n  \"available\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/services/681abba93e12374568dde9fe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"services",
+						"681abba93e12374568dde9fe"
+					]
+				},
+				"description": "Actualiza un servicio existente (requiere admin)"
+			},
+			"response": []
+		},
+		{
+			"name": "Desactivar Servicio (Admin)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/services/65d4a1b2c8e9f01234567890",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"services",
+						"65d4a1b2c8e9f01234567890"
+					]
+				},
+				"description": "Desactiva un servicio (set available=false) (requiere admin)"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_token",
+			"value": "TU_JWT_ADMIN_AQUI",
+			"type": "string"
+		},
+		{
+			"key": "user_token",
+			"value": "TU_JWT_USUARIO_AQUI",
+			"type": "string"
+		},
+		{
+			"key": "service_id",
+			"value": "65d4a1b2c8e9f01234567890",
+			"type": "string"
+		}
+	]
+}

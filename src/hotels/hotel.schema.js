@@ -30,16 +30,20 @@ const HotelSchema = new Schema({
     min: Number,
     max: Number,
   },
+  busyRooms: { type: Number },
+  availableRooms: { type: Number },
   rooms: [
     {
       type: Schema.Types.ObjectId,
       ref: "Room",
+      autopopulate: true,
     },
   ],
   services: [
     {
       type: Schema.Types.ObjectId,
       ref: "Service",
+      autopopulate: true,
     },
   ],
   state: {

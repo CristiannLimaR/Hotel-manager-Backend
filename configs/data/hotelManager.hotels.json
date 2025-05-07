@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "681aca0b6c38a92a345e2970"
+  },
+  "name": "Ceferino's Ejecutive Club",
+  "direction": "6A Avenida 13-54, Cdad. de Guatemala",
+  "category": "1 Estrella",
+  "facilities": [
+    "Wifi",
+    "Piscina",
+    "Access to private escorts room",
+    "Premium escorts unlimited"
+  ],
+  "rangeOfPrices": {
+    "min": 500,
+    "max": 3000
+  },
+  "busyRooms": 0,
+  "availableRooms": 1,
+  "rooms": [
+    {
+      "$oid": "681aca826c38a92a345e2979"
+    }
+  ],
+  "services": [],
+  "state": true,
+  "__v": 1
+}]

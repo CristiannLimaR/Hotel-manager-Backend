@@ -1,15 +1,10 @@
 import { check } from "express-validator";
 import Room from "../rooms/room.model.js";
-import Hotel from "../hotels/hotel.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 import User from "../users/user.model.js";
 import Reservation from "../reservations/reservation.model.js";
 
 export const validateReservationInput = [
-  check("user", "User ID is required").not().isEmpty(),
-  check("user").custom(async (id) => {
-    const exists = await User.findById(id);
-    if (!exists) throw new Error("User does not exist");
-  }),
   check("hotel", "Hotel ID is required").not().isEmpty(),
   check("hotel").custom(async (id) => {
     const exists = await Hotel.findById(id);

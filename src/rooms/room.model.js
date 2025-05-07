@@ -31,8 +31,7 @@ const roomSchema = new Schema(
     hotel_id: {
       type: Schema.Types.ObjectId,
       ref: "Hotel",
-      required: true,
-      autopopulate: true,
+      required: true
     },
     available: {
       type: Boolean,
@@ -45,6 +44,12 @@ const roomSchema = new Schema(
   },
   { timestamps: true }
 );
+
+roomSchema.methods.toJSON = function() {
+  const { __v, _id, ...room } = this.toObject();
+  room.uid = _id;
+  return room;
+}
 
 roomSchema.plugin(autopopulate);
 

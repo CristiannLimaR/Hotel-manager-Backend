@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "681aca826c38a92a345e2979"
+  },
+  "type": "Deluxe",
+  "capacity": 2,
+  "price_per_night": 150.99,
+  "availability": [],
+  "hotel_id": {
+    "$oid": "681aca0b6c38a92a345e2970"
+  },
+  "available": true,
+  "state": true,
+  "createdAt": {
+    "$date": "2025-05-07T02:50:42.484Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T02:50:42.484Z"
+  },
+  "__v": 0
+}]

@@ -1,4 +1,4 @@
-import Hotel from "../hotels/hotel.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 import { check, validationResult } from "express-validator";
 import { validarCampos } from "./validar-campos.js";
 

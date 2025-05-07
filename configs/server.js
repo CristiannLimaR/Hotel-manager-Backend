@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import { hash, verify } from "argon2";
 import { dbConection } from "./mongo.js";
-import { hash } from "argon2";
 
 import User from "../src/users/user.model.js";
 
@@ -14,6 +14,7 @@ import eventsRoutes from "../src/event/event.routes.js";
 import roomsRoutes from "../src/rooms/room.routes.js";
 import reservationRoutes from "../src/reservations/reservation.routes.js";
 import servicesRoutes from "../src/services/service.routes.js";
+import invoiceRoutes from "../src/invoices/invoice.routes.js";
 
 export const middlewares = (app) => {
   app.use(express.urlencoded({ extended: false }));
@@ -31,6 +32,7 @@ const routes = (app) => {
   app.use("/HotelManager/v1/reservations", reservationRoutes);
   app.use("/HotelManager/v1/auth", authRoutes);
   app.use("/HotelManager/v1/user", userRoutes);
+  app.use("/HotelManager/v1/invoices", invoiceRoutes);
 };
 
 const connectDB = async () => {

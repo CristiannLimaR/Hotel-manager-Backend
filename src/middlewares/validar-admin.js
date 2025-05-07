@@ -12,7 +12,7 @@ export const validarAdmin = async (req, res, next) => {
   }
 
   try {
-    const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+    const { uid } = jwt.verify(token, process.env.SECRETPRIVATEKEY);
 
     const usuario = await User.findById(uid);
 
@@ -29,6 +29,7 @@ export const validarAdmin = async (req, res, next) => {
     }
 
     req.user = usuario;
+    
     next();
 
   } catch (error) {

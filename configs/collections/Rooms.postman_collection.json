@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "7491d6a7-7eb1-486a-a5fe-74cc0cd7bb95",
+		"name": "Rooms",
+		"description": "API para gestión de habitaciones de hotel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42149033",
+		"_collection_link": "https://cristian-2488.postman.co/workspace/32873ad3-8212-4cf2-a843-c5888a232501/collection/42149033-7491d6a7-7eb1-486a-a5fe-74cc0cd7bb95?action=share&source=collection_link&creator=42149033"
+	},
+	"item": [
+		{
+			"name": "Crear Habitación (Admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"Deluxe\",\n  \"capacity\": 2,\n  \"price_per_night\": 150.99,\n  \"hotel_id\": \"681aca0b6c38a92a345e2970\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/rooms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"rooms"
+					]
+				},
+				"description": "Crea una nueva habitación (requiere admin)"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Habitaciones por Hotel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/hotels/681aca0b6c38a92a345e2970/rooms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"hotels",
+						"681aca0b6c38a92a345e2970",
+						"rooms"
+					]
+				},
+				"description": "Obtiene habitaciones disponibles de un hotel con filtros"
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Habitación por ID (Admin)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/rooms/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"rooms",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Obtiene detalles de una habitación específica (requiere admin)"
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar Habitación (Admin)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"Superior Deluxe\",\n  \"capacity\": 3,\n  \"price_per_night\": 199.99,\n  \"availability\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/rooms/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"rooms",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Actualiza información de una habitación (requiere admin)"
+			},
+			"response": []
+		},
+		{
+			"name": "Deshabilitar Habitación (Admin)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/rooms/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"rooms",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Deshabilita una habitación (set available=false)"
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar Habitación (Admin)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-token",
+						"value": "{{jwtToken}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/hotelManager/v1/rooms/65d4a1b2c8e9f01234567891",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotelManager",
+						"v1",
+						"rooms",
+						"65d4a1b2c8e9f01234567891"
+					]
+				},
+				"description": "Elimina lógicamente una habitación (set state=false)"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_token",
+			"value": "TU_JWT_ADMIN_AQUI",
+			"type": "string"
+		},
+		{
+			"key": "hotel_id",
+			"value": "65d4a1b2c8e9f01234567890",
+			"type": "string"
+		},
+		{
+			"key": "room_id",
+			"value": "65d4a1b2c8e9f01234567891",
+			"type": "string"
+		}
+	]
+}

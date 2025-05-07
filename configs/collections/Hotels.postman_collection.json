@@ -141,29 +141,8 @@
 		{
 			"name": "Delete",
 			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "x-token",
-						"value": "{{jwtToken}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:3000/hotelManager/v1/hotels/upgrade/6819b946058816f4214fb75b",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"hotelManager",
-						"v1",
-						"hotels",
-						"upgrade",
-						"6819b946058816f4214fb75b"
-					]
-				}
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "681acd9c6c0cd25574a8b252"
+  },
+  "user": {
+    "$oid": "681998288bf0c4096097c2d5"
+  },
+  "hotel": {
+    "$oid": "681aca0b6c38a92a345e2970"
+  },
+  "room": {
+    "$oid": "681aca826c38a92a345e2979"
+  },
+  "checkInDate": {
+    "$date": "2025-12-15T00:00:00.000Z"
+  },
+  "checkOutDate": {
+    "$date": "2025-12-20T00:00:00.000Z"
+  },
+  "status": "active",
+  "services": [
+    {
+      "service": {
+        "$oid": "681abba93e12374568dde9fe"
+      },
+      "quantity": 2,
+      "_id": {
+        "$oid": "681acd9c6c0cd25574a8b253"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-05-07T03:03:56.109Z"
+  },
+  "updatedAt": {
+    "$date": "2025-05-07T03:03:56.109Z"
+  },
+  "__v": 0
+}]
