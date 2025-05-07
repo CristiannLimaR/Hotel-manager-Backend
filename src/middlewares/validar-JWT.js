@@ -4,6 +4,8 @@ import User from "../users/user.model.js"
 export const validarJWT = async (req,res,next) => {
     const token = req.header('x-token')
 
+    console.log("token", token)
+
     if (!token) {
         return res.status(401).json({
             mensaje: 'No hay token en la petición'
@@ -12,7 +14,7 @@ export const validarJWT = async (req,res,next) => {
 
     try {
 
-        const {uid} = jwt.verify(token,process.env.SECRETPRIVATYKEY)
+        const {uid} = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
         const user = await User.findById(uid)
 
         if (!user) {

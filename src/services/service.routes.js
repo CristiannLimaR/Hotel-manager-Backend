@@ -4,7 +4,7 @@ import {
   getServices,
   getServiceById,
   updateService,
-  deleteService,
+  disableService
 } from "./service.controller.js";
 
 import {
@@ -36,7 +36,7 @@ router.put(
 router.delete(
   "/:id",
   [validarJWT, validarAdmin, ServiceExists, validarCampos],
-  deleteService
+  disableService
 );
 
 export default router;

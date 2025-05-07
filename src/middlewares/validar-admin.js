@@ -28,7 +28,7 @@ export const validarAdmin = async (req, res, next) => {
       });
     }
 
-    req.usuario = usuario;
+    req.user = usuario;
     next();
 
   } catch (error) {

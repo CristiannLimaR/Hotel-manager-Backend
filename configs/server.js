@@ -13,6 +13,7 @@ import hotelsRoutes from "../src/hotels/hotels.routes.js";
 import eventsRoutes from "../src/event/event.routes.js";
 import roomsRoutes from "../src/rooms/room.routes.js";
 import reservationRoutes from "../src/reservations/reservation.routes.js";
+import servicesRoutes from "../src/services/service.routes.js";
 
 export const middlewares = (app) => {
   app.use(express.urlencoded({ extended: false }));
@@ -26,6 +27,7 @@ const routes = (app) => {
   app.use("/HotelManager/v1/hotels", hotelsRoutes);
   app.use("/HotelManager/v1/rooms", roomsRoutes);
   app.use("/HotelManager/v1/events", eventsRoutes);
+  app.use("/HotelManager/v1/services", servicesRoutes);
   app.use("/HotelManager/v1/reservations", reservationRoutes);
   app.use("/HotelManager/v1/auth", authRoutes);
   app.use("/HotelManager/v1/user", userRoutes);

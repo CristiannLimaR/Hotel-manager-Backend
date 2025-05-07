@@ -1,5 +1,5 @@
 import { check } from "express-validator";
-import Service from "../services/service.model";
+import Service from "../services/service.model.js";
 
 export const validateServiceBody = [
   check("name")

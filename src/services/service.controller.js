@@ -1,6 +1,6 @@
-import Service from "../models/service.model.js";
+import Service from "./service.model.js";
 
-// Create service
+
 export const createService = async (req, res) => {
   try {
     const { name, description, price, category, available } = req.body;
@@ -34,7 +34,7 @@ export const createService = async (req, res) => {
   }
 };
 
-// Get all services
+
 export const getServices = async (req, res) => {
   try {
     const { category, available } = req.query;
@@ -58,7 +58,6 @@ export const getServices = async (req, res) => {
   }
 };
 
-// Get single service by ID
 export const getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -83,7 +82,7 @@ export const getServiceById = async (req, res) => {
   }
 };
 
-// Update service
+
 export const updateService = async (req, res) => {
   try {
     const { id } = req.params;

@@ -8,7 +8,6 @@ const router = Router()
 router.post(
     "/register/",
     registerValidator,
-    validarAdmin,
     register
     
 )
