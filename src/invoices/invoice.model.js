@@ -1,34 +1,58 @@
 import { Schema, model } from "mongoose";
 import mongooseAutoPopulate from "mongoose-autopopulate";
 
-const InvoiceSchema = Schema ({
-    huesped_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        requerid: true,
-        autoPopulate: { select: "nombre email -_id"}
+const InvoiceSchema = new Schema(
+  {
+    reservation: {
+      type: Schema.Types.ObjectId,
+      ref: "Reservation",
+      required: true,
+      autopopulate: true,
     },
-    hotel: {
-        type: Schema.Types.ObjectId,
-        ref: "Hotel",
-        required: [true, "El hotel es obligatorio"],
-        autopopulate: { select: "nombre direccion -_id" },
+    nights: {
+      type: Number,
+      required: true,
     },
+    roomPricePerNight: {
+      type: Schema.Types.Decimal128,
+      required: true,
+    },
+    roomTotal: {
+      type: Schema.Types.Decimal128,
+      required: true,
+    },
+    services: [
+      {
+        name: { type: String, required: true },
+        price: { type: Schema.Types.Decimal128, required: true },
+        quantity: { type: Number, required: true, min: 1 },
+        total: { type: Schema.Types.Decimal128, required: true },
+      },
+    ],
     total_pagar: {
-        type: Number,
-        required: true
+      type: Schema.Types.Decimal128,
+      required: true,
     },
-    servicios_adicionales: {
-        type: [String],
-        ref: "Service",
-        default: [],
+    statusInvoice: {
+      type: String,
+      enum: ["PAID", "PENDING"],
+      default: "PENDING",
     },
-    date: {
-        type: Date,
-        default: Date.now
-    }
-});
+    status: {
+      type: Boolean,
+      default: true,
+    },
+    Date: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
 InvoiceSchema.plugin(mongooseAutoPopulate);
 
-export default model("Invoice", InvoiceSchema)
+export default model("Invoice", InvoiceSchema);
