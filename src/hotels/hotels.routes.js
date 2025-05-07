@@ -5,7 +5,10 @@ import { validarAdmin } from '../middlewares/validar-admin.js';
 
 import {
     saveHotel,
-    getHotels
+    getHotels,
+    searchHotel,
+    upgradeHotel,
+    deleteHotel
 } from "./hotels.controller.js"
 
 const router = Router()
@@ -22,6 +25,32 @@ router.post(
 router.get(
     "/get",
     getHotels
+)
+
+router.get(
+    "/search/:id",
+    [
+        validarJWT,
+    ],
+    searchHotel
+)
+
+router.put(
+    "/upgrade/:id",
+    [
+        validarJWT,
+        validarAdmin
+    ],
+    upgradeHotel
+)
+
+router.delete(
+    "/delete/:id",
+    [
+        validarJWT,
+        validarAdmin
+    ],
+    deleteHotel
 )
 
 export default router
