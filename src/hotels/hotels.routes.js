@@ -13,14 +13,16 @@ import { saveRoom, getRooms } from '../rooms/room.controller.js';
 import { hotelExists, validateUpdateHotel, validateSaveHotel } from '../middlewares/validator-hotel.js';
 import { validateRoomCreation } from '../middlewares/validator-rooms.js';
 import { validarCampos } from '../middlewares/validar-campos.js';
-
-
+import { uploadHotelImages } from '../middlewares/uploadImages.js';
+import { parseJsonFields } from '../middlewares/parseJsonFields.js';
 const router = Router()
 
 router.post(
     "/save",
     [
         validarJWT,
+        uploadHotelImages,
+        parseJsonFields(['facilities', 'rangeOfPrices', 'services']),
         validateSaveHotel,
         validarAdmin
     ],
@@ -45,6 +47,8 @@ router.put(
     [
         validarJWT,
         hotelExists,
+        uploadHotelImages,
+        parseJsonFields(['facilities', 'rangeOfPrices', 'services']),
         validateUpdateHotel,
         validarAdmin
     ],

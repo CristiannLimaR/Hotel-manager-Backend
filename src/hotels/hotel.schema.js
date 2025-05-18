@@ -5,7 +5,11 @@ const HotelSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    autopopulate: true,
   },
   direction: {
     type: String,
@@ -46,6 +50,9 @@ const HotelSchema = new Schema({
       autopopulate: true,
     },
   ],
+  images: {
+    type: [String],
+  },
   state: {
     type: Boolean,
     default: true,

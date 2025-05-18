@@ -150,3 +150,19 @@ export const getEmailsAndNames = async (req, res) => {
         });
     }
 };
+
+export const getManagers = async (req, res) => {
+  try {
+    const managers = await User.find({ role: 'MANAGER_ROLE' });
+    res.status(200).json({
+      success: true,
+      managers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "An error occurred while fetching managers.",
+      error: error.message,
+    });
+  }
+};

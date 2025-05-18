@@ -70,3 +70,20 @@ export const validatePasswordOnDelete = async (req, res, next) => {
 
   next();
 };
+
+export const validateEmailExists = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  
+  if (user) {
+    return res.status(400).json({
+      success: false,
+      msg: "Email already exists",
+    });
+  } else {
+    next();
+  }
+
+};
+

@@ -5,7 +5,7 @@ import Hotel from "../hotels/hotel.schema.js";
 export const crearEvento = async (req, res) => {
   try {
     const { hotelId } = req.params;
-    const { nombre_evento, descripcion, fecha, recursos_asignados, servicios_adicionales, tipo_evento } = req.body;
+    const { nombre_evento, descripcion, fecha, recursos_asignados, servicios_adicionales, tipo_evento, images } = req.body;
 
     // Validar que el hotel exista
     const hotel = await Hotel.findById(hotelId);
@@ -21,6 +21,7 @@ export const crearEvento = async (req, res) => {
       recursos_asignados,
       servicios_adicionales,
       tipo_evento,
+      images,
     });
 
     await nuevoEvento.save();

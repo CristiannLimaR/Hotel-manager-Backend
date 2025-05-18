@@ -31,7 +31,7 @@ const routes = (app) => {
   app.use("/HotelManager/v1/services", servicesRoutes);
   app.use("/HotelManager/v1/reservations", reservationRoutes);
   app.use("/HotelManager/v1/auth", authRoutes);
-  app.use("/HotelManager/v1/user", userRoutes);
+  app.use("/HotelManager/v1/users", userRoutes);
   app.use("/HotelManager/v1/invoices", invoiceRoutes);
 };
 

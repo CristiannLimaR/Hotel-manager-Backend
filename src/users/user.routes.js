@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, getUserById, updateUser, deleteUser, getEmailsAndNames } from "./user.controller.js";
+import { getUsers, getUserById, updateUser, deleteUser, getEmailsAndNames, getManagers } from "./user.controller.js";
 import { checkOwnAccount, checkRoleChange } from "../middlewares/validator-user.js";
 import { validarAdmin } from "../middlewares/validar-admin.js";
 
@@ -13,6 +13,7 @@ router.get("/emails-and-names",
 );
 
 router.get("/", getUsers);
+router.get("/managers", getManagers);
 router.get("/:userId", getUserById);
 router.put(
     "/:id",

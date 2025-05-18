@@ -35,6 +35,8 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log("email:", email);
+    console.log("password:", password);
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -61,6 +63,12 @@ export const login = async (req, res) => {
     
     return res.status(200).json({
       msg: "Usuario logueado correctamente",
+      user:{
+        id: user.id,
+        nombre: user.nombre,
+        email: user.email,
+        role: user.role,
+      },
       token,
     });
   } catch (error) {

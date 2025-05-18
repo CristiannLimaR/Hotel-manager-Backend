@@ -1,26 +1,30 @@
 import Reservation from "./reservation.model.js";
+import Room from "../rooms/room.model.js";
+import dayjs from "dayjs";
 
 export const saveReservation = async (req, res) => {
   try {
-    const authentificatedUser = req.user._id;
-    const {
-      hotel,
-      room,
-      checkInDate,
-      checkOutDate,
-      services = []
-    } = req.body;
+    const userId = req.user._id;
+    const { hotel, room: roomId, checkInDate, checkOutDate, services = [] } = req.body;
 
     const reservation = new Reservation({
-      user: authentificatedUser,
+      user: userId,
       hotel,
-      room,
+      room: roomId,
       checkInDate,
       checkOutDate,
       services,
     });
 
-    await reservation.save();
+    const room = await Room.findById(roomId);
+    if (!room) throw new Error("Room not found");
+
+    room.nonAvailability.push({ start: checkInDate, end: checkOutDate });
+
+    await Promise.all([
+      reservation.save(),
+      room.save()
+    ]);
 
     res.status(201).json({
       msg: "Reservation saved successfully",
@@ -33,6 +37,7 @@ export const saveReservation = async (req, res) => {
     });
   }
 };
+
 
 export const getReservations = async (req, res) => {
   try {
@@ -124,21 +129,32 @@ export const updateReservation = async (req, res) => {
 export const deleteReservation = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const reservation = await Reservation.findByIdAndUpdate(
-      id,
-      { status: "cancelled" },
-      { new: true }
-    );
+    const reservation = await Reservation.findById(id);
 
     if (!reservation) {
-      return res.status(404).json({
-        msg: "Reservation not found",
-      });
+      return res.status(404).json({ msg: "Reservation not found" });
     }
 
+    const room = await Room.findById(reservation.room);
+    if (!room) throw new Error("Associated room not found");
+
+    // Eliminar el rango de fechas de nonAvailability
+    room.nonAvailability = room.nonAvailability.filter(period => {
+      return !(
+        dayjs(period.start).isSame(dayjs(reservation.checkInDate), 'day') &&
+        dayjs(period.end).isSame(dayjs(reservation.checkOutDate), 'day')
+      );
+    });
+
+    reservation.status = "cancelled";
+
+    await Promise.all([
+      reservation.save(),
+      room.save()
+    ]);
+
     res.status(200).json({
-      msg: "Reservation cancelled successfully",
+      msg: "Reservation cancelled and room availability updated",
       reservation,
     });
   } catch (e) {
@@ -148,3 +164,4 @@ export const deleteReservation = async (req, res) => {
     });
   }
 };
+

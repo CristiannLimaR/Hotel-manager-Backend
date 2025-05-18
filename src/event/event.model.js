@@ -30,6 +30,9 @@ const EventSchema = Schema(
       type: [String],
       default: [],
     },
+    images: {
+      type: [String],
+    },
     servicios_adicionales: [
       {
         type: Schema.Types.ObjectId,

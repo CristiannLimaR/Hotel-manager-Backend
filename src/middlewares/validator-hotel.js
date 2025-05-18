@@ -5,8 +5,7 @@ import { validarCampos } from "./validar-campos.js";
 export const validateSaveHotel = [
   check("name")
     .notEmpty()
-    .withMessage("El nombre del hotel es obligatorio")
-    .custom(async (value) => await validateHotelNameUnique(value)),
+    .withMessage("El nombre del hotel es obligatorio"),
 
   check("direction")
     .notEmpty()
@@ -48,8 +47,7 @@ export const validateUpdateHotel = [
   check("name")
     .optional()
     .isString()
-    .withMessage("El nombre debe ser una cadena de texto")
-    .custom(async (value) => await validateHotelNameUnique(value)),
+    .withMessage("El nombre debe ser una cadena de texto"),
   check("direction")
     .optional()
     .isString()
@@ -76,13 +74,7 @@ export const validateUpdateHotel = [
   check("rangeOfPrices")
     .optional()
     .isObject()
-    .withMessage("El rango de precios debe ser un objeto")
-    .custom((value) => {
-      if (value && value.min && value.max && value.min > value.max) {
-        throw new Error("El precio mínimo no puede ser mayor al precio máximo");
-      }
-      return true;
-    }),
+    .withMessage("El rango de precios debe ser un objeto"),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -93,13 +85,6 @@ export const validateUpdateHotel = [
   },
 ];
 
-export const validateHotelNameUnique = async (name) => {
-  const hotel = await Hotel.findOne({ name });
-  if (hotel) {
-    throw new Error("El nombre del hotel ya está registrado");
-  }
-  return true;
-};
 
 export const hotelExists = async (req, res, next) => {
   try {

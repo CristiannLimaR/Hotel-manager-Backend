@@ -3,56 +3,36 @@ import autopopulate from "mongoose-autopopulate";
 
 const roomSchema = new Schema(
   {
-    type: {
-      type: String,
-      required: true,
-    },
-    capacity: {
-      type: Number,
-      required: true,
-    },
-    price_per_night: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    availability: [
+    type: { type: String, required: true },
+    capacity: { type: Number, required: true },
+    price_per_night: { type: Number, required: true, min: 0 },
+    nonAvailability: [
       {
-        start: {
-          type: Date,
-          required: true,
-        },
-        end: {
-          type: Date,
-          required: true,
-        },
+        start: { type: Date, required: true },
+        end: { type: Date, required: true },
       },
     ],
     hotel_id: {
       type: Schema.Types.ObjectId,
       ref: "Hotel",
-      required: true
+      required: true,
     },
-    available: {
-      type: Boolean,
-      default: true,
+    images: {
+      type: [String],
     },
-    state: {
-      type: Boolean,
-      default: true,
-    },
+    available: { type: Boolean, default: true },
+    state: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
 
-roomSchema.methods.toJSON = function() {
+roomSchema.methods.toJSON = function () {
   const { __v, _id, ...room } = this.toObject();
   room.uid = _id;
   return room;
-}
+};
 
 roomSchema.plugin(autopopulate);
 
 const Room = model("Room", roomSchema);
-
 export default Room;
