@@ -7,7 +7,8 @@ import {
     getHotels,
     getHotelById,
     updateHotel,
-    deleteHotel
+    deleteHotel,
+    getHotelByAdmin
 } from "./hotels.controller.js"
 import { saveRoom, getRooms } from '../rooms/room.controller.js';
 import { hotelExists, validateUpdateHotel, validateSaveHotel } from '../middlewares/validator-hotel.js';
@@ -41,6 +42,14 @@ router.get(
     ],
     getHotelById
 )
+
+router.get(
+    "/admin",
+    [
+        validarJWT
+    ],
+    getHotelByAdmin
+)   
 
 router.put(
     "/upgrade/:id",

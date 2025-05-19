@@ -1,6 +1,7 @@
 import User from './user.model.js';
 import { hash, verify } from 'argon2';
 import { response, request } from 'express';
+import Hotel from '../hotels/hotel.schema.js';
 
 export const getUsers = async (req = request, res = response) => {
     try {
@@ -153,10 +154,18 @@ export const getEmailsAndNames = async (req, res) => {
 
 export const getManagers = async (req, res) => {
   try {
-    const managers = await User.find({ role: 'MANAGER_ROLE' });
+    const managers = await User.find({ role: 'MANAGER_ROLE', estado: true });
+    
+    const hotels = await Hotel.find({ state: true }).select('admin');
+    
+   
+    const assignedManagerIds = new Set(hotels.map(hotel => hotel.admin.toString()));
+    
+    const availableManagers = managers.filter(manager => !assignedManagerIds.has(manager._id.toString()));
+
     res.status(200).json({
       success: true,
-      managers,
+      managers: availableManagers,
     });
   } catch (error) {
     res.status(500).json({

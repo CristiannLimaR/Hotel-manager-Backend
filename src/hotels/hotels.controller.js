@@ -2,10 +2,10 @@ import Hotel from "./hotel.schema.js";
 import Room from "../rooms/room.model.js";
 import cloudinary from '../../configs/cloudinary.js';
 
-// Función auxiliar para extraer el public_id de una URL de Cloudinary
+
 const getPublicIdFromUrl = (url) => {
   try {
-    // Primero intentamos con el patrón completo
+
     const fullPattern = /\/v\d+\/([^/]+)\.\w+$/;
     let matches = url.match(fullPattern);
     
@@ -13,15 +13,13 @@ const getPublicIdFromUrl = (url) => {
       return matches[1];
     }
 
-    // Si no funciona, intentamos con un patrón más simple
     const simplePattern = /hotels\/([^/]+)\.\w+$/;
     matches = url.match(simplePattern);
     
     if (matches) {
       return `hotels/${matches[1]}`;
     }
-
-    // Si aún no funciona, intentamos extraer la última parte de la URL
+    
     const urlParts = url.split('/');
     const lastPart = urlParts[urlParts.length - 1];
     if (lastPart) {
@@ -170,7 +168,6 @@ export const updateHotel = async (req, res) => {
     console.log('Body completo:', req.body);
     console.log('Imágenes a eliminar:', deletedImages);
 
-    // Obtener el hotel actual para verificar las imágenes existentes
     const currentHotel = await Hotel.findById(id);
     if (!currentHotel) {
       return res.status(404).json({
@@ -178,7 +175,6 @@ export const updateHotel = async (req, res) => {
       });
     }
 
-    // Eliminar las imágenes de Cloudinary que fueron marcadas para eliminar
     if (deletedImages.length > 0) {
       console.log('Iniciando eliminación de imágenes...');
       const deletePromises = deletedImages.map(async (imageUrl) => {
@@ -202,11 +198,9 @@ export const updateHotel = async (req, res) => {
       console.log('Proceso de eliminación completado');
     }
 
-    // Filtrar las imágenes existentes para mantener solo las que no han sido eliminadas
     const currentImages = currentHotel.images || [];
     console.log('Imágenes actuales:', currentImages);
 
-    // Función para normalizar URLs para comparación
     const normalizeUrl = (url) => {
       try {
         const urlObj = new URL(url);
@@ -216,11 +210,9 @@ export const updateHotel = async (req, res) => {
       }
     };
 
-    // Crear un conjunto de nombres de archivo de imágenes eliminadas
     const deletedFileNames = new Set(deletedImages.map(normalizeUrl));
     console.log('Nombres de archivo eliminados:', Array.from(deletedFileNames));
 
-    // Filtrar las imágenes actuales
     const remainingImages = currentImages.filter(img => {
       const fileName = normalizeUrl(img);
       const shouldKeep = !deletedFileNames.has(fileName);
@@ -230,10 +222,8 @@ export const updateHotel = async (req, res) => {
 
     console.log('Imágenes restantes después del filtrado:', remainingImages);
 
-    // Obtener las nuevas imágenes subidas
     const newImages = req.files?.map(file => file.path) || [];
 
-    // Combinar las imágenes existentes con las nuevas
     const updatedImages = [...remainingImages, ...newImages];
 
     const updatedHotel = await Hotel.findByIdAndUpdate(
@@ -314,6 +304,36 @@ export const deleteHotel = async (req, res) => {
       success: false,
       msg: "Error deleting hotel",
       error: e.message,
+    });
+  }
+};
+
+export const getHotelByAdmin = async (req, res) => {
+  try {
+    const user = req.user;
+
+    const hotel = await Hotel.findOne({ 
+      admin: user._id,
+      state: true 
+    })
+
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        msg: "No se encontró un hotel administrado por este usuario",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      msg: "Hotel encontrado",
+      hotel,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      msg: "Error al buscar el hotel",
+      error: error.message,
     });
   }
 };
