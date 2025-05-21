@@ -8,7 +8,10 @@ import {
     getHotelById,
     updateHotel,
     deleteHotel,
-    getHotelByAdmin
+    getHotelByAdmin,
+    getHotelOccupancyStats,
+    getReservationsForMonths,
+    busyAndAvailableRooms
 } from "./hotels.controller.js"
 import { saveRoom, getRooms } from '../rooms/room.controller.js';
 import { hotelExists, validateUpdateHotel, validateSaveHotel } from '../middlewares/validator-hotel.js';
@@ -76,4 +79,32 @@ router.delete(
 
 router.post("/:hotelId/rooms",[validarJWT,validateRoomCreation], validarCampos, saveRoom);
 router.get("/:hotelId/rooms", getRooms);
+
+// FILTERS
+router.get(
+    "/occupancy-stats",
+    [
+        validarJWT,
+        validarAdmin
+    ],
+    getHotelOccupancyStats
+)
+
+router.get(
+    "/month-stats",
+    [
+        validarJWT
+    ],
+    getReservationsForMonths
+)
+
+router.get(
+    "/busy-available-rooms",
+    [
+        validarJWT
+    ],
+    busyAndAvailableRooms
+)
+
+
 export default router
