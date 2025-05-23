@@ -23,13 +23,13 @@ export const saveReservation = async (req, res) => {
       checkOutDate,
       services,
     });
-    await reservation.save()
+    await reservation.save();
 
     // Calcular ocupadas / disponibles
     if (hotelData) {
       const allRooms = await Room.find({
         hotel_id: hotelData._id,
-        state: true
+        state: true,
         //available: true,
       });
 
@@ -39,10 +39,11 @@ export const saveReservation = async (req, res) => {
       });
 
       const busyRooms = allRooms.filter((room) =>
-        busyRoomsIds.map( id => id.toString() ).includes(room._id.toString())
+        busyRoomsIds.map((id) => id.toString()).includes(room._id.toString())
       );
       const availableRooms = allRooms.filter(
-        (room) => !busyRoomsIds.map( id => id.toString() ).includes(room._id.toString())
+        (room) =>
+          !busyRoomsIds.map((id) => id.toString()).includes(room._id.toString())
       );
 
       hotelData.busyRooms = busyRooms.length;
@@ -55,7 +56,7 @@ export const saveReservation = async (req, res) => {
     if (!room) throw new Error("Room not found");
 
     room.nonAvailability.push({ start: checkInDate, end: checkOutDate });
-    await room.save()
+    await room.save();
 
     res.status(201).json({
       msg: "Reservation saved successfully",
@@ -204,6 +205,31 @@ export const deleteReservation = async (req, res) => {
     res.status(200).json({
       msg: "Reservation cancelled and room availability updated",
       reservation,
+    });
+  } catch (e) {
+    res.status(500).json({
+      msg: "Error cancelling reservation",
+      error: e.message,
+    });
+  }
+};
+
+// GET FOR STATS
+export const totalReservations = async (req, res) => {
+  try {
+    const { userId, hotelId, status } = req.query;
+
+    const query = {};
+
+    if (userId) query.user = userId;
+    if (hotelId) query.hotel = hotelId;
+    if (status) query.status = status;
+
+    const totalReservations = await Reservation.countDocuments(query);
+
+    res.status(200).json({
+      msg: "Successfully retrieved total reservations",
+      totalReservations,
     });
   } catch (e) {
     res.status(500).json({
