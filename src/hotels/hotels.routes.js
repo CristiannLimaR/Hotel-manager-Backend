@@ -11,7 +11,8 @@ import {
     getHotelByAdmin,
     getHotelOccupancyStats,
     getReservationsForMonths,
-    busyAndAvailableRooms
+    busyAndAvailableRooms,
+    getHotelByManager
 } from "./hotels.controller.js"
 import { saveRoom, getRooms } from '../rooms/room.controller.js';
 import { hotelExists, validateUpdateHotel, validateSaveHotel } from '../middlewares/validator-hotel.js';
@@ -52,7 +53,15 @@ router.get(
         validarJWT
     ],
     getHotelByAdmin
-)   
+) 
+
+router.get(
+    "/hotel-by-manager",
+    [
+        validarJWT
+    ],
+    getHotelByManager
+)
 
 router.put(
     "/upgrade/:id",

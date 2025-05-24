@@ -492,3 +492,28 @@ export const busyAndAvailableRooms = async (req, res) => {
     });
   }
 };
+
+export const getHotelByManager = async (req,res) => {
+  try {
+    const userId = req.user._id;
+    const hotel = await Hotel.findOne({ admin: userId, state: true });
+
+    if (!hotel) {
+      return res.status(404).json({
+        ss: false,
+        msg: "Hotel not found for this user"
+      })
+    }
+
+    res.status(200).json({
+      hotel
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      ss: false,
+      msg: "Error getting hotel by manager",
+      error: error.message
+    })
+  }
+}
