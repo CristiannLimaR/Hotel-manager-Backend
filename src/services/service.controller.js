@@ -1,17 +1,23 @@
 import Service from "./service.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 
 
 export const createService = async (req, res) => {
   try {
-    const { name, description, price, category, available } = req.body;
+    const { name, description, price, category, available, hotel } = req.body;
 
-    if (!name || !category || price === undefined) {
-      return res.status(400).json({ msg: "Name, category, and price are required" });
+    if (!name || !category || price === undefined || !hotel) {
+      return res.status(400).json({ msg: "Name, category, price and hotel are required" });
     }
 
     const existing = await Service.findOne({ name });
     if (existing) return res.status(400).json({ msg: "Service with that name already exists" });
 
+    const hotelExists = await Hotel.findById(hotel);
+    if (!hotelExists) {
+      return res.status(404).json({ msg: "Hotel not found" });
+    }
+    
     const service = new Service({
       name,
       description,
@@ -21,6 +27,12 @@ export const createService = async (req, res) => {
     });
 
     await service.save();
+
+    // Añadir el servicio al array de servicios del hotel
+    await Hotel.findByIdAndUpdate(
+      hotel,
+      { $push: { services: service._id } }
+    );
 
     res.status(201).json({
       msg: "Service created successfully",

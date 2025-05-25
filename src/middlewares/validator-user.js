@@ -4,7 +4,7 @@ import User from "../users/user.model.js";
 
 export const checkOwnAccount = async (req, res, next) => {
   const { userId } = req.params;
-  const authenticatedUser = req.usuario;
+  const authenticatedUser = req.user;
 
   if (!authenticatedUser) {
     return res.status(401).json({
@@ -26,7 +26,7 @@ export const checkOwnAccount = async (req, res, next) => {
 
 export const checkRoleChange = (req, res, next) => {
   const { role } = req.body;
-  const authenticatedUser = req.usuario;
+  const authenticatedUser = req.user;
 
   if (!authenticatedUser) {
        return res.status(401).json({
