@@ -5,12 +5,17 @@ import {
   obtenerEventoPorId,
   editarEvento,
   cancelarEvento,
+  misEventos,
 } from "./event.controller.js"
+import { validarJWT } from "../middlewares/validar-JWT.js";
 
 const router = Router();
 
+router.get("/my-events", validarJWT, misEventos)
 // Crear evento
-router.post("/hotels/:hotelId/events",  crearEvento);
+router.post("/hotels/:hotelId/events", validarJWT, crearEvento);
+
+
 
 // Listar eventos
 router.get("/hotels/:hotelId/events", listarEventosPorHotel);

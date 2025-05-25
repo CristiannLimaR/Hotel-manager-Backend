@@ -13,10 +13,12 @@ export const crearEvento = async (req, res) => {
       return res.status(404).json({ message: "Hotel no encontrado" });
     }
 
+    const user = req.user._id
     const nuevoEvento = new Event({
       nombre_evento,
       descripcion,
       fecha,
+      user,
       hotel_id: hotelId,
       recursos_asignados,
       servicios_adicionales,
@@ -106,3 +108,17 @@ export const cancelarEvento = async (req, res) => {
     res.status(500).json({ message: "Error al cancelar el evento", error: error.message });
   }
 };
+
+export const misEventos = async (req, res) => {
+  try {
+    const user = req.user._id
+    const events = await Event.find({user})
+
+    res.status(200).json({
+      message: "Eventos obtenidos exitosamente",
+      events
+    })
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener eventos", error: error.message });
+  }
+}
