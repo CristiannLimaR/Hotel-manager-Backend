@@ -1,5 +1,6 @@
 import Reservation from "./reservation.model.js";
 import Room from "../rooms/room.model.js";
+import Hotel from "../hotels/hotel.schema.js";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore.js";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js";
@@ -37,22 +38,49 @@ export const saveReservation = async (req, res) => {
       });
     }
 
+    const hotelData = await Hotel.findById(hotel);
+
     const reservation = new Reservation({
       user: userId,
-      hotel,
-      room: roomId,
+      hotel: hotel.toString(),
+      room: roomId.toString(),
       checkInDate,
       checkOutDate,
       services,
       guests
     });
+    
+    await reservation.save();
+
+    // Calcular ocupadas / disponibles
+    if (hotelData) {
+      const allRooms = await Room.find({
+        hotel_id: hotelData._id,
+        state: true,
+        //available: true,
+      });
+
+      const busyRoomsIds = await Reservation.distinct("room", {
+        hotel: hotelData._id,
+        status: "active",
+      });
+
+      const busyRooms = allRooms.filter((room) =>
+        busyRoomsIds.map((id) => id.toString()).includes(room._id.toString())
+      );
+      const availableRooms = allRooms.filter(
+        (room) =>
+          !busyRoomsIds.map((id) => id.toString()).includes(room._id.toString())
+      );
+
+      hotelData.busyRooms = busyRooms.length;
+      hotelData.availableRooms = availableRooms.length;
+
+      await hotelData.save();
+    }
 
     room.nonAvailability.push({ start: checkInDate, end: checkOutDate });
-
-    await Promise.all([
-      reservation.save(),
-      room.save()
-    ]);
+    await room.save();
 
     res.status(201).json({
       success: true,
@@ -67,7 +95,6 @@ export const saveReservation = async (req, res) => {
     });
   }
 };
-
 
 export const getReservations = async (req, res) => {
   try {
@@ -162,6 +189,7 @@ export const deleteReservation = async (req, res) => {
   try {
     const { id } = req.params;
     const reservation = await Reservation.findById(id);
+    const hotelData = await Hotel.findById(reservation.hotel);
 
     if (!reservation) {
       return res.status(404).json({ msg: "Reservation not found" });
@@ -173,17 +201,39 @@ export const deleteReservation = async (req, res) => {
    
     room.nonAvailability = room.nonAvailability.filter(period => {
       return !(
-        dayjs(period.start).isSame(dayjs(reservation.checkInDate), 'day') &&
-        dayjs(period.end).isSame(dayjs(reservation.checkOutDate), 'day')
+        dayjs(period.start).isSame(dayjs(reservation.checkInDate), "day") &&
+        dayjs(period.end).isSame(dayjs(reservation.checkOutDate), "day")
       );
     });
 
     reservation.status = "cancelled";
 
-    await Promise.all([
-      reservation.save(),
-      room.save()
-    ]);
+    // Actualizar el availableRooms de Hotel.schema
+    if (hotelData) {
+      const allRooms = await Room.find({
+        hotel_id: hotelData._id,
+        state: true,
+      });
+
+      const busyRoomsIds = await Reservation.distinct("room", {
+        hotel: hotelData._id,
+        status: "active",
+      });
+
+      const busyRooms = allRooms.filter((room) =>
+        busyRoomsIds.includes(room._id.toString())
+      );
+      const availableRooms = allRooms.filter(
+        (room) => !busyRoomsIds.includes(room._id.toString())
+      );
+
+      hotelData.busyRooms = busyRooms.length;
+      hotelData.availableRooms = availableRooms.length;
+
+      await hotelData.save();
+    }
+
+    await Promise.all([reservation.save(), room.save()]);
 
     res.status(200).json({
       msg: "Reservation cancelled and room availability updated",
@@ -208,6 +258,34 @@ export const getReservationsByUser = async (req, res) => {
   } catch (e) {
     res.status(500).json({
       msg: "Error retrieving reservations",
+      error: e.message,
+    });
+  }
+};
+
+
+
+      
+// GET FOR STATS
+export const totalReservations = async (req, res) => {
+  try {
+    const { userId, hotelId, status } = req.query;
+
+    const query = {};
+
+    if (userId) query.user = userId;
+    if (hotelId) query.hotel = hotelId;
+    if (status) query.status = status;
+
+    const totalReservations = await Reservation.countDocuments(query);
+
+    res.status(200).json({
+      msg: "Successfully retrieved total reservations",
+      totalReservations,
+    });
+  } catch (e) {
+    res.status(500).json({
+      msg: "Error cancelling reservation",
       error: e.message,
     });
   }

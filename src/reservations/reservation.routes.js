@@ -5,7 +5,8 @@ import {
   getReservationById,
   updateReservation,
   deleteReservation,
-  getReservationsByUser
+  getReservationsByUser,
+  totalReservations
 } from "./reservation.controller.js";
 
 import { validarJWT } from "../middlewares/validar-JWT.js";
@@ -22,6 +23,9 @@ router.post(
   validarCampos,
   saveReservation
 );
+
+// STAT
+router.get("/busyRooms", [validarJWT, validarAdmin], totalReservations);
 
 router.get(
   "/",
@@ -59,5 +63,6 @@ router.delete(
   validarCampos,
   deleteReservation
 );
+
 
 export default router;
