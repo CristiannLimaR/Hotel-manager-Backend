@@ -37,9 +37,6 @@ router.get(
 
 router.get(
     "/search/:id",
-    [
-        validarJWT,
-    ],
     getHotelById
 )
 

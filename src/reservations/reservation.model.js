@@ -40,14 +40,13 @@ const reservationSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Service",
           autopopulate: true,
-        },
-        quantity: {
-          type: Number,
-          default: 1,
-          min: 1,
-        },
+        }
       }
     ],
+    guests: {
+      type: Number,
+      required: true,
+    }
   },
   { timestamps: true }
 );

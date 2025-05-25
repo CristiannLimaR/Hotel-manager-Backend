@@ -15,6 +15,10 @@ const HotelSchema = new Schema({
     type: String,
     required: true,
   },
+  location: {
+    type: String,
+    required: true,
+  },
   category: {
     type: String,
     enum: [

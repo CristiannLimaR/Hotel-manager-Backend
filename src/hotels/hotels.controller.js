@@ -38,6 +38,7 @@ export const saveHotel = async (req, res) => {
     let {
       name,
       direction,
+      location,
       category,
       facilities,
       rangeOfPrices,
@@ -55,6 +56,7 @@ export const saveHotel = async (req, res) => {
     const hotel = new Hotel({
       name,
       direction,
+      location,
       category,
       facilities,
       rangeOfPrices,
@@ -156,6 +158,7 @@ export const updateHotel = async (req, res) => {
     const { 
       name, 
       direction, 
+      location,
       category, 
       facilities, 
       rangeOfPrices, 
@@ -231,6 +234,7 @@ export const updateHotel = async (req, res) => {
       {
         name,
         direction,
+        location,
         category,
         facilities,
         rangeOfPrices,

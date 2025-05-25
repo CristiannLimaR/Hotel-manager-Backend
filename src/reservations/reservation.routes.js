@@ -4,7 +4,8 @@ import {
   getReservations,
   getReservationById,
   updateReservation,
-  deleteReservation
+  deleteReservation,
+  getReservationsByUser
 } from "./reservation.controller.js";
 
 import { validarJWT } from "../middlewares/validar-JWT.js";
@@ -27,6 +28,13 @@ router.get(
   [validarJWT, validarAdmin], 
   validarCampos, 
   getReservations
+);
+
+router.get(
+  "/my-reservations",
+  [validarJWT], 
+  validarCampos, 
+  getReservationsByUser
 );
 
 router.get(

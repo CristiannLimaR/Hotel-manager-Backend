@@ -56,7 +56,7 @@ export const validateReservationUpdate = [
 export const ReservationExists = async (req, res, next) => {
     try {
       const reservation = await Reservation.findById(req.params.id);
-      if (!reservation || !reservation.state) {
+      if (!reservation || reservation.status === "cancelled") {
         return res
           .status(404)
           .json({ message: "Reservacion no encontrada o no disponible" });
@@ -71,16 +71,17 @@ export const ReservationExists = async (req, res, next) => {
   export const validateUserOrAdmin = async (req, res, next) => {
     try {
       const reservationId = req.params.id;
-      const authentificatedUser = req.usuario._id;
+      const authentificatedUser = req.user._id;
       const roleFromUser = authentificatedUser.role;
   
       const reservation = await Reservation.findById(reservationId);
-  
+      console.log(authentificatedUser)
+      console.log(reservation.user._id)
       if (!reservation) {
         return res.status(404).json({ msg: "Reservation not found" });
       }
   
-      const isOwner = reservation.user.toString() === authentificatedUser;
+      const isOwner = reservation.user._id.toString() === authentificatedUser.toString();
       const isAdminOrManager = roleFromUser === "ADMIN_ROLE" || roleFromUser === "MANAGER_ROLE";
   
       if (!isOwner && !isAdminOrManager) {

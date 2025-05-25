@@ -155,13 +155,13 @@ export const getEmailsAndNames = async (req, res) => {
 export const getManagers = async (req, res) => {
   try {
     const managers = await User.find({ role: 'MANAGER_ROLE', estado: true });
-    
     const hotels = await Hotel.find({ state: true }).select('admin');
+    const assignedManagerIds = new Set(hotels.map(hotel => hotel.admin?._id?.toString()));
     
-   
-    const assignedManagerIds = new Set(hotels.map(hotel => hotel.admin.toString()));
-    
-    const availableManagers = managers.filter(manager => !assignedManagerIds.has(manager._id.toString()));
+    const availableManagers = managers.filter(manager => {
+      const managerId = manager._id.toString();
+      return !assignedManagerIds.has(managerId);
+    });
 
     res.status(200).json({
       success: true,
