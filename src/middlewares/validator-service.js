@@ -39,7 +39,7 @@ export const validateServiceBody = [
 export const ServiceExists = async (req, res, next) => {
     try {
       const service = await Service.findById(req.params.id);
-      if (!service || !service.available) {
+      if (!service) {
         return res
           .status(404)
           .json({ message: "Servicio no encontrado o no disponible" });

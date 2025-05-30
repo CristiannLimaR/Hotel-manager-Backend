@@ -87,3 +87,28 @@ export const validateEmailExists = async (req, res, next) => {
 
 };
 
+export const validateCurrentPassword = async (req, res, next) => {
+  const userId = req.user._id
+  const { currentPassword, password } = req.body;
+
+  if (password && !currentPassword) {
+    return res.status(400).json({
+      success: false,
+      msg: "Current password is required to update the password",
+    });
+  }
+
+  if (password) {
+    const user = await User.findById(userId);
+    const validPassword = await verify(user.password, currentPassword);
+
+    if (!validPassword) {
+      return res.status(400).json({
+        success: false,
+        msg: "Current password is incorrect",
+      });
+    }
+  }
+
+  next();
+};

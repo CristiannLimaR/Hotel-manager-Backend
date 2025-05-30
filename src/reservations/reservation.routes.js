@@ -6,7 +6,8 @@ import {
   updateReservation,
   deleteReservation,
   getReservationsByUser,
-  totalReservations
+  totalReservations,
+  getActiveUsersByHotel
 } from "./reservation.controller.js";
 
 import { validarJWT } from "../middlewares/validar-JWT.js";
@@ -64,5 +65,11 @@ router.delete(
   deleteReservation
 );
 
+router.get(
+  "/active-users/:hotelId",
+  [validarJWT, validarAdmin],
+  validarCampos,
+  getActiveUsersByHotel
+);
 
 export default router;

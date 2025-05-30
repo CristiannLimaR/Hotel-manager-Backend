@@ -32,11 +32,10 @@ export const saveInvoice = async (req, res) => {
 
     
     const services = reservation.services.map((s) => {
-      const total = parseFloat(s.service.price) * s.quantity;
+      const total = parseFloat(s.service.price);
       return {
         name: s.service.name,
         price: s.service.price,
-        quantity: s.quantity,
         total,
       };
     });
@@ -84,9 +83,23 @@ export const getInvoices = async (req, res) => {
       }
   
       if (userId) query["reservation.user"] = userId;
-      if (hotelId) query["reservation.hotel"] = hotelId;
+      
+      let invoices;
+      if (hotelId) {
+        // Primero encontramos las reservas del hotel
+        const reservations = await Reservation.find({ hotel: hotelId });
+        const reservationIds = reservations.map(res => res._id);
+        // Luego buscamos las facturas que corresponden a esas reservas
+        query.reservation = { $in: reservationIds };
+      }
   
-      const invoices = await Invoice.find(query);
+      invoices = await Invoice.find(query).populate({
+        path: 'reservation',
+        populate: {
+          path: 'hotel',
+          select: 'name'
+        }
+      });
   
       res.status(200).json({
         msg: "Invoices retrieved successfully",

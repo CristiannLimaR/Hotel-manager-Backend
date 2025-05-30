@@ -5,12 +5,11 @@ import Hotel from "../hotels/hotel.schema.js";
 
 export const getUsers = async (req = request, res = response) => {
   try {
-    const { limit = 10, offset = 0 } = req.query;
     const query = { estado: true };
 
     const [total, users] = await Promise.all([
       User.countDocuments(query),
-      User.find(query).skip(Number(offset)).limit(Number(limit)),
+      User.find(query)
     ]);
 
     res.status(200).json({
@@ -166,6 +165,33 @@ export const getManagers = async (req, res) => {
     res.status(500).json({
       success: false,
       msg: "An error occurred while fetching managers.",
+      error: error.message,
+    });
+  }
+};
+
+export const updatePassword = async (req, res = response) => {
+  try {
+    const userId = req.user._id
+    const { password } = req.body;
+
+    const hashedPassword = await hash(password);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      msg: "User successfully updated",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "Error updating user",
       error: error.message,
     });
   }

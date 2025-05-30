@@ -71,7 +71,7 @@ export const ReservationExists = async (req, res, next) => {
   export const validateUserOrAdmin = async (req, res, next) => {
     try {
       const reservationId = req.params.id;
-      const authentificatedUser = req.user._id;
+      const authentificatedUser = req.user;
       const roleFromUser = authentificatedUser.role;
   
       const reservation = await Reservation.findById(reservationId);
@@ -81,7 +81,7 @@ export const ReservationExists = async (req, res, next) => {
         return res.status(404).json({ msg: "Reservation not found" });
       }
   
-      const isOwner = reservation.user._id.toString() === authentificatedUser.toString();
+      const isOwner = reservation.user._id.toString() === authentificatedUser._id.toString();
       const isAdminOrManager = roleFromUser === "ADMIN_ROLE" || roleFromUser === "MANAGER_ROLE";
   
       if (!isOwner && !isAdminOrManager) {

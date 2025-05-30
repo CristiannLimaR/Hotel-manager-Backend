@@ -10,20 +10,19 @@ dayjs.extend(isSameOrAfter);
 
 export const saveReservation = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { hotel, room: roomId, checkInDate, checkOutDate, services = [], guests } = req.body;
+    const { hotel, room: roomId, checkInDate, checkOutDate, services = [], guests, userId = req.user._id } = req.body;
 
     const room = await Room.findById(roomId);
     if (!room) throw new Error("Room not found");
 
-    // Verificar si la habitación está disponible en las fechas indicadas
+    
     const isAvailable = !room.nonAvailability.some(period => {
       const reservationStart = dayjs(checkInDate);
       const reservationEnd = dayjs(checkOutDate);
       const periodStart = dayjs(period.start);
       const periodEnd = dayjs(period.end);
 
-      // Verificar si hay solapamiento de fechas
+      
       return (
         (reservationStart.isAfter(periodStart) && reservationStart.isBefore(periodEnd)) ||
         (reservationEnd.isAfter(periodStart) && reservationEnd.isBefore(periodEnd)) ||
@@ -52,12 +51,11 @@ export const saveReservation = async (req, res) => {
     
     await reservation.save();
 
-    // Calcular ocupadas / disponibles
+    
     if (hotelData) {
       const allRooms = await Room.find({
         hotel_id: hotelData._id,
         state: true,
-        //available: true,
       });
 
       const busyRoomsIds = await Reservation.distinct("room", {
@@ -80,7 +78,11 @@ export const saveReservation = async (req, res) => {
     }
 
     room.nonAvailability.push({ start: checkInDate, end: checkOutDate });
-    await room.save();
+    room.available = false;
+    await Room.findByIdAndUpdate(roomId, { 
+      available: false,
+      nonAvailability: room.nonAvailability 
+    });
 
     res.status(201).json({
       success: true,
@@ -167,6 +169,14 @@ export const updateReservation = async (req, res) => {
       { new: true }
     );
 
+    if(reservation.status === "completed"){
+      const room = await Room.findById(reservation.room);
+      if (room) {
+        room.available = true;
+        await room.save();
+      }
+    }
+
     if (!reservation) {
       return res.status(404).json({
         msg: "Reservation not found",
@@ -198,7 +208,6 @@ export const deleteReservation = async (req, res) => {
     const room = await Room.findById(reservation.room);
     if (!room) throw new Error("Associated room not found");
 
-   
     room.nonAvailability = room.nonAvailability.filter(period => {
       return !(
         dayjs(period.start).isSame(dayjs(reservation.checkInDate), "day") &&
@@ -206,6 +215,7 @@ export const deleteReservation = async (req, res) => {
       );
     });
 
+    await Room.findByIdAndUpdate(reservation.room, { available: true });
     reservation.status = "cancelled";
 
     // Actualizar el availableRooms de Hotel.schema
@@ -263,9 +273,6 @@ export const getReservationsByUser = async (req, res) => {
   }
 };
 
-
-
-      
 // GET FOR STATS
 export const totalReservations = async (req, res) => {
   try {
@@ -287,6 +294,64 @@ export const totalReservations = async (req, res) => {
     res.status(500).json({
       msg: "Error cancelling reservation",
       error: e.message,
+    });
+  }
+};
+
+export const getActiveUsersByHotel = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+
+    
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        msg: "Hotel no encontrado"
+      });
+    }
+
+    
+    const activeReservations = await Reservation.find({
+      hotel: hotelId,
+      status: "active"
+    }).populate({
+      path: 'user',
+      select: 'nombre email role estado createdAt'
+    }).sort({ checkInDate: -1 });
+
+    const userMap = new Map();
+
+   
+    activeReservations.forEach(reservation => {
+      const userId = reservation.user._id.toString();
+      if (!userMap.has(userId)) {
+        userMap.set(userId, {
+          user: reservation.user,
+          checkInDate: reservation.checkInDate,
+          checkOutDate: reservation.checkOutDate,
+          room: reservation.room,
+          guests: reservation.guests,
+          totalReservations: 1
+        });
+      } else {
+        const existingUser = userMap.get(userId);
+        existingUser.totalReservations += 1;
+      }
+    });
+
+    const activeUsers = Array.from(userMap.values());
+
+    res.status(200).json({
+      success: true,
+      msg: "Usuarios con reservas activas obtenidos exitosamente",
+      activeUsers
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: "Error al obtener usuarios con reservas activas",
+      error: error.message
     });
   }
 };

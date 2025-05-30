@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getUsers, getUserById, updateUser, deleteUser, getEmailsAndNames, getManagers } from "./user.controller.js";
-import { checkOwnAccount, checkRoleChange } from "../middlewares/validator-user.js";
+import { getUsers, getUserById, updateUser, deleteUser, getEmailsAndNames, getManagers, updatePassword } from "./user.controller.js";
+import { checkOwnAccount, checkRoleChange, validateCurrentPassword } from "../middlewares/validator-user.js";
 import { validarAdmin } from "../middlewares/validar-admin.js";
 
 const router = Router();
@@ -35,6 +35,11 @@ router.delete(
     ],
     deleteUser
 )
+
+router.patch("/password",
+    validateCurrentPassword,
+    updatePassword
+  )
 
 
 

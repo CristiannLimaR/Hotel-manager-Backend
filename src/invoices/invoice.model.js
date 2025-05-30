@@ -25,7 +25,6 @@ const InvoiceSchema = new Schema(
       {
         name: { type: String, required: true },
         price: { type: Schema.Types.Decimal128, required: true },
-        quantity: { type: Number, required: true, min: 1 },
         total: { type: Schema.Types.Decimal128, required: true },
       },
     ],
@@ -35,8 +34,7 @@ const InvoiceSchema = new Schema(
     },
     statusInvoice: {
       type: String,
-      enum: ["PAID", "PENDING"],
-      default: "PENDING",
+      default: "PAID",
     },
     status: {
       type: Boolean,
