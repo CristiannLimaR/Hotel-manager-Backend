@@ -173,6 +173,12 @@ export const updateReservation = async (req, res) => {
       const room = await Room.findById(reservation.room);
       if (room) {
         room.available = true;
+        room.nonAvailability = room.nonAvailability.filter(period => {
+          return !(
+            dayjs(period.start).isSame(dayjs(reservation.checkInDate), "day") &&
+            dayjs(period.end).isSame(dayjs(reservation.checkOutDate), "day")
+          );
+        });
         await room.save();
       }
     }

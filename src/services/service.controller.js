@@ -10,8 +10,12 @@ export const createService = async (req, res) => {
       return res.status(400).json({ msg: "Name, category, price and hotel are required" });
     }
 
-    const existing = await Service.findOne({ name });
-    if (existing) return res.status(400).json({ msg: "Service with that name already exists" });
+    // Eliminar el índice único si existe
+    try {
+      await Service.collection.dropIndex('name_1');
+    } catch (error) {
+      // Ignorar el error si el índice no existe
+    }
 
     const hotelExists = await Hotel.findById(hotel);
     if (!hotelExists) {
@@ -151,5 +155,24 @@ export const disableService = async (req, res) => {
       msg: "Error disabling service",
       error: error.message,
     });
+  }
+};
+
+const addService = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const serviceData = req.body;
+
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ message: 'Hotel no encontrado' });
+    }
+
+    hotel.services.push(serviceData);
+    await hotel.save();
+
+    res.status(201).json(hotel.services);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

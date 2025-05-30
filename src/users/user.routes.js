@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getUsers, getUserById, updateUser, deleteUser, getEmailsAndNames, getManagers, updatePassword } from "./user.controller.js";
 import { checkOwnAccount, checkRoleChange, validateCurrentPassword } from "../middlewares/validator-user.js";
 import { validarAdmin } from "../middlewares/validar-admin.js";
+import { validarJWT } from "../middlewares/validar-JWT.js";
 
 const router = Router();
 
@@ -18,11 +19,8 @@ router.get("/:userId", getUserById);
 router.put(
     "/:id",
     [
-        validarAdmin,
-        checkOwnAccount,
-        checkRoleChange,
-        validarAdmin
-        
+        validarJWT,
+        checkRoleChange, 
     ],
     updateUser
 )

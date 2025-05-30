@@ -39,7 +39,7 @@ export const listarEventosPorHotel = async (req, res) => {
     const { hotelId } = req.params;
     const { fecha, tipo_evento } = req.query;
 
-    const filtros = { hotel_id: hotelId, estado: true };
+    const filtros = { hotel_id: hotelId };
 
     if (fecha) {
       filtros.fecha = { $gte: new Date(fecha) };

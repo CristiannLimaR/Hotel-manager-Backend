@@ -28,7 +28,6 @@ const getPublicIdFromUrl = (url) => {
 
     return null;
   } catch (error) {
-    console.error("Error al extraer public_id:", error);
     return null;
   }
 };
@@ -54,7 +53,6 @@ export const saveHotel = async (req, res) => {
         : rangeOfPrices;
     services = typeof services === "string" ? JSON.parse(services) : services;
 
-    console.log("req.files:", req.files);
     const imageUrls = req.files?.map((file) => file.path) || [];
 
     const hotel = new Hotel({
@@ -77,7 +75,6 @@ export const saveHotel = async (req, res) => {
       msg: "Hotel saved successfully",
     });
   } catch (e) {
-    console.error(e);
     return res.status(500).json({
       msg: "Error saving hotel",
       error: e.message,
@@ -90,7 +87,6 @@ export const getHotels = async (req, res) => {
     const query = { state: true };
     const { category, direction, minAvailableRooms } = req.query;
 
-    // FILTERS
     if (category) {
       query.category = category;
     }
@@ -172,9 +168,6 @@ export const updateHotel = async (req, res) => {
       admin,
     } = req.body;
 
-    console.log("Body completo:", req.body);
-    console.log("Imágenes a eliminar:", deletedImages);
-
     const currentHotel = await Hotel.findById(id);
     if (!currentHotel) {
       return res.status(404).json({
@@ -183,30 +176,20 @@ export const updateHotel = async (req, res) => {
     }
 
     if (deletedImages.length > 0) {
-      console.log("Iniciando eliminación de imágenes...");
       const deletePromises = deletedImages.map(async (imageUrl) => {
-        console.log("Procesando URL para eliminar:", imageUrl);
         const publicId = getPublicIdFromUrl(imageUrl);
-        console.log("Public ID extraído:", publicId);
 
         if (publicId) {
           try {
-            console.log("Intentando eliminar imagen con ID:", publicId);
-            const result = await cloudinary.uploader.destroy(publicId);
-            console.log("Resultado de eliminación:", result);
+            await cloudinary.uploader.destroy(publicId);
           } catch (error) {
-            console.error(`Error eliminando imagen ${publicId}:`, error);
           }
-        } else {
-          console.log("No se pudo extraer public_id de la URL:", imageUrl);
         }
       });
       await Promise.all(deletePromises);
-      console.log("Proceso de eliminación completado");
     }
 
     const currentImages = currentHotel.images || [];
-    console.log("Imágenes actuales:", currentImages);
 
     const normalizeUrl = (url) => {
       try {
@@ -218,16 +201,12 @@ export const updateHotel = async (req, res) => {
     };
 
     const deletedFileNames = new Set(deletedImages.map(normalizeUrl));
-    console.log("Nombres de archivo eliminados:", Array.from(deletedFileNames));
 
     const remainingImages = currentImages.filter((img) => {
       const fileName = normalizeUrl(img);
       const shouldKeep = !deletedFileNames.has(fileName);
-      console.log(`Imagen ${fileName} - ¿Mantener?: ${shouldKeep}`);
       return shouldKeep;
     });
-
-    console.log("Imágenes restantes después del filtrado:", remainingImages);
 
     const newImages = req.files?.map((file) => file.path) || [];
 
@@ -280,13 +259,6 @@ export const updateHotel = async (req, res) => {
 export const deleteHotel = async (req, res) => {
   try {
     const { id } = req.params;
-    const { confirm } = req.body;
-
-    if (!confirm) {
-      return res.status(400).json({
-        msg: "Please confirm deletion by setting 'confirm' to true",
-      });
-    }
 
     const hotel = await Hotel.findByIdAndUpdate(
       id,
@@ -346,10 +318,6 @@ export const getHotelByAdmin = async (req, res) => {
   }
 };
 
-/* =================================== GETS FOR STATS =================================== */
-
-// FOR ADMIN
-// Todos los hoteles más ocupados
 export const getHotelOccupancyStats = async (req, res) => {
   try {
     const hotels = await Hotel.find({ state: true });
@@ -357,11 +325,9 @@ export const getHotelOccupancyStats = async (req, res) => {
     const stats = hotels.map((hotel) => {
       const totalRooms =
         (Number(hotel.availableRooms) || 0) + (Number(hotel.busyRooms) || 0);
-      console.log(totalRooms);
       const porcentOccupied =
         totalRooms > 0
-          ? // Pasarlo a porcentaje
-            (hotel.busyRooms / totalRooms) * 100
+          ? (hotel.busyRooms / totalRooms) * 100
           : 0;
 
       return {
@@ -370,7 +336,6 @@ export const getHotelOccupancyStats = async (req, res) => {
       };
     });
 
-    // Ordenar de mayor a menos ocupado
     stats.sort((a, b) => b.porcentOccupied - a.porcentOccupied);
 
     res.status(200).json({ stats });
@@ -382,8 +347,6 @@ export const getHotelOccupancyStats = async (req, res) => {
   }
 };
 
-// FOR MANAGERS
-// Reservaciones por mes
 export const getReservationsForMonths = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -396,13 +359,11 @@ export const getReservationsForMonths = async (req, res) => {
       });
     }
 
-    // Obtener las reservaciones del hotel
     const reservations = await Reservation.find({
       hotel: hotel._id,
       status: "active",
     });
 
-    // Agruparlos por mes
     const monthCount = Array(12).fill(0);
 
     reservations.forEach((res) => {
@@ -410,7 +371,6 @@ export const getReservationsForMonths = async (req, res) => {
       monthCount[monthIndex]++;
     });
 
-    // Pasarlo a legible
     const months = [
       "Enero",
       "Febrero",
@@ -443,7 +403,6 @@ export const getReservationsForMonths = async (req, res) => {
   }
 };
 
-// Rooms disponibles VS Busy rooms
 export const busyAndAvailableRooms = async (req, res) => {
   try {
     const userId = await req.user._id;
@@ -521,3 +480,68 @@ export const getHotelByManager = async (req,res) => {
     })
   }
 }
+
+const getMostOccupiedHotels = async (req, res) => {
+  try {
+    const hotels = await Hotel.find()
+      .populate('rooms')
+      .lean();
+
+    const hotelsWithStats = hotels.map(hotel => {
+      const totalRooms = hotel.rooms.length;
+      const occupiedRooms = hotel.rooms.filter(room => room.status === 'occupied').length;
+      const occupancyRate = totalRooms > 0 ? (occupiedRooms / totalRooms) * 100 : 0;
+
+      return {
+        ...hotel,
+        occupancyRate
+      };
+    });
+
+    const sortedHotels = hotelsWithStats.sort((a, b) => b.occupancyRate - a.occupancyRate);
+
+    res.json(sortedHotels);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getMonthlyReservations = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const reservations = await Reservation.find({ hotel: hotelId })
+      .populate('room')
+      .lean();
+
+    const monthlyStats = {};
+    reservations.forEach(reservation => {
+      const month = new Date(reservation.checkIn).toLocaleString('default', { month: 'long' });
+      if (!monthlyStats[month]) {
+        monthlyStats[month] = 0;
+      }
+      monthlyStats[month]++;
+    });
+
+    res.json(monthlyStats);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getRoomAvailability = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const hotel = await Hotel.findById(hotelId).populate('rooms');
+    
+    const availableRooms = hotel.rooms.filter(room => room.status === 'available').length;
+    const occupiedRooms = hotel.rooms.filter(room => room.status === 'occupied').length;
+
+    res.json({
+      available: availableRooms,
+      occupied: occupiedRooms,
+      total: hotel.rooms.length
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
