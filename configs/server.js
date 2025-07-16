@@ -25,14 +25,14 @@ export const middlewares = (app) => {
 };
 
 const routes = (app) => {
-  app.use("/HotelManager/v1/hotels", hotelsRoutes);
-  app.use("/HotelManager/v1/rooms", roomsRoutes);
-  app.use("/HotelManager/v1/events", eventsRoutes);
-  app.use("/HotelManager/v1/services", servicesRoutes);
-  app.use("/HotelManager/v1/reservations", reservationRoutes);
-  app.use("/HotelManager/v1/auth", authRoutes);
-  app.use("/HotelManager/v1/users", userRoutes);
-  app.use("/HotelManager/v1/invoices", invoiceRoutes);
+  app.use("/hotels", hotelsRoutes);
+  app.use("/rooms", roomsRoutes);
+  app.use("/events", eventsRoutes);
+  app.use("/services", servicesRoutes);
+  app.use("/reservations", reservationRoutes);
+  app.use("/auth", authRoutes);
+  app.use("/users", userRoutes);
+  app.use("/invoices", invoiceRoutes);
 };
 
 const connectDB = async () => {
