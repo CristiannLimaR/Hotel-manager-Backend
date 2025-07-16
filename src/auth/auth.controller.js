@@ -7,7 +7,6 @@ export const register = async (req, res) => {
     const data = req.body;
     const encryptedPassword = await hash(data.password);
 
-    console.log("datos:", data);
 
     const user = await User.create({
       nombre: data.nombre,
@@ -35,8 +34,6 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    console.log("email:", email);
-    console.log("password:", password);
     const user = await User.findOne({ email });
 
     if (!user) {
